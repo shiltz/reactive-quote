@@ -4,12 +4,13 @@ spring:
     password: sa
     username: sa
     url: jdbc:h2:mem:testdb
-    data: data.sql
+    data: database/data.sql
   h2:
     console:
       path: /h2-console
       enabled: true
   jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
     database: h2
     hibernate:
       ddl-auto: create-drop
