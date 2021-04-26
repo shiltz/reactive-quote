@@ -23,9 +23,9 @@ public class QuoteController {
     this.quoteService = quoteService;
   }
 
-  @GetMapping("/{id}")
-  public Mono<String> getQuote(@PathVariable String id) {
-    return Mono.defer(() -> Mono.just("Hello world!" + id));
+  @GetMapping("/{referenceNumber}")
+  public Mono<CreateQuoteResponseDto> getQuote(@PathVariable String referenceNumber) {
+    return quoteService.getQuoteByReferenceNumber(referenceNumber);
   }
 
   @PostMapping

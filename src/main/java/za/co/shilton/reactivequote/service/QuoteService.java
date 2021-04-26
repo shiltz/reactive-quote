@@ -1,14 +1,13 @@
 package za.co.shilton.reactivequote.service;
 
 import java.math.BigDecimal;
-import java.util.List;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import za.co.shilton.reactivequote.dto.AmountDto;
 import za.co.shilton.reactivequote.dto.CreateQuoteRequestDto;
 import za.co.shilton.reactivequote.dto.CreateQuoteResponseDto;
 import za.co.shilton.reactivequote.entity.Quote;
 import za.co.shilton.reactivequote.enums.CurrencyEnum;
+import za.co.shilton.reactivequote.mapper.QuoteMapper;
 import za.co.shilton.reactivequote.repository.ProductRepository;
 import za.co.shilton.reactivequote.repository.QuoteRepository;
 
@@ -16,15 +15,18 @@ import za.co.shilton.reactivequote.repository.QuoteRepository;
 public class QuoteService {
 
   public static final BigDecimal SERVICE_FEE = BigDecimal.ONE;
-  public static final String VAS = "VAS";
   public static final String PRODUCT_NOT_FOUND = "Product not found";
 
   private final ProductRepository productRepository;
   private final QuoteRepository quoteRepository;
+  private final QuoteMapper quoteMapper;
 
-  public QuoteService(ProductRepository productRepository, QuoteRepository quoteRepository) {
+  public QuoteService(ProductRepository productRepository,
+                      QuoteRepository quoteRepository,
+                      QuoteMapper quoteMapper) {
     this.productRepository = productRepository;
     this.quoteRepository = quoteRepository;
+    this.quoteMapper = quoteMapper;
   }
 
   public Mono<CreateQuoteResponseDto> createQuote(CreateQuoteRequestDto requestDto) {
@@ -34,22 +36,15 @@ public class QuoteService {
         .flatMap(this::getCreateQuoteResponseDto);
   }
 
+  public Mono<CreateQuoteResponseDto> getQuoteByReferenceNumber(String referenceNumber) {
+    var savedQuote =
+        this.quoteRepository.findQuoteByReferenceNumber(referenceNumber)
+            .orElseThrow(() -> new RuntimeException("Quote not found"));
+    return Mono.defer(() -> Mono.just(quoteMapper.quoteToCreateQuoteResponseDto(savedQuote)));
+  }
+
   private Mono<CreateQuoteResponseDto> getCreateQuoteResponseDto(Quote savedQuote) {
-    return Mono.defer(() -> Mono.just(CreateQuoteResponseDto.builder()
-        .referenceNumber(savedQuote.getReferenceNumber())
-        .amount(AmountDto.builder()
-            .amount(savedQuote.getAmount())
-            .currency(savedQuote.getCurrency().getName())
-            .build())
-        .fees(List.of(AmountDto.builder()
-            .amount(savedQuote.getFeeAmount())
-            .currency(savedQuote.getCurrency().getName())
-            .build()))
-        .total(AmountDto.builder()
-            .amount(savedQuote.getAmount().add(savedQuote.getFeeAmount()))
-            .currency(savedQuote.getCurrency().getName())
-            .build())
-        .build()));
+    return Mono.defer(() -> Mono.just(quoteMapper.quoteToCreateQuoteResponseDto(savedQuote)));
   }
 
   private Mono<Quote> saveQuote(Quote quote) {
