@@ -4,16 +4,14 @@ spring:
     password: sa
     username: sa
     url: jdbc:h2:mem:testdb
-    data: database/data.sql
+    data: classpath:database/data.sql
+    schema: classpath:database/schema.sql
   h2:
     console:
       path: /h2-console
       enabled: true
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
-    database: h2
     hibernate:
-      ddl-auto: create-drop
-      naming:
-        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+      ddl-auto: none
     show-sql: true

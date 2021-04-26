@@ -53,12 +53,11 @@ public class QuoteService {
   }
 
   private Mono<Quote> saveQuote(Quote quote) {
-    return Mono.fromSupplier(() -> quoteRepository.save(quote));
+    return Mono.fromSupplier(() -> quoteRepository.saveAndFlush(quote));
   }
 
   private Mono<Quote> getQuote(CreateQuoteRequestDto requestDto, BigDecimal productAmount) {
     var quote = new Quote();
-    quote.setReferenceNumber(VAS + (int) (Math.random() * 1000));
     quote.setProductId(requestDto.getProductId());
     quote.setCurrency(CurrencyEnum.ZAR);
     quote.setAmount(productAmount.multiply(BigDecimal.valueOf(requestDto.getQuantity())));

@@ -1,8 +1,6 @@
 package za.co.shilton.reactivequote.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -11,12 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import reactor.test.StepVerifier;
 import za.co.shilton.reactivequote.dto.CreateQuoteRequestDto;
+import za.co.shilton.reactivequote.repository.QuoteRepository;
 
 @SpringBootTest
 class QuoteServiceTest {
 
   @Autowired
   private QuoteService quoteService;
+
+  @Autowired
+  private QuoteRepository quoteRepository;
 
   @Test
   void createQuote() {
@@ -27,7 +29,7 @@ class QuoteServiceTest {
 
     StepVerifier.create(quote)
         .consumeNextWith(createQuoteResponseDto -> {
-          assertNotNull(createQuoteResponseDto.getReferenceNumber());
+          assertEquals("VAS 00000000001", createQuoteResponseDto.getReferenceNumber());
           assertEquals(BigDecimal.valueOf(59.98), createQuoteResponseDto.getAmount().getAmount());
           assertEquals(BigDecimal.ONE, createQuoteResponseDto.getFees().get(0).getAmount());
           assertEquals(BigDecimal.valueOf(60.98), createQuoteResponseDto.getTotal().getAmount());
