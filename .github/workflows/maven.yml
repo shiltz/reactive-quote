@@ -37,8 +37,11 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
-        REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+        TO_REGISTRY_USERNAME: ${{ secrets.TO_REGISTRY_USERNAME }}
+        TO_REGISTRY_PASSWORD: ${{ secrets.TO_REGISTRY_PASSWORD }}
+        FROM_REGISTRY_USERNAME: ${{ secrets.FROM_REGISTRY_USERNAME }}
+        FROM_REGISTRY_PASSWORD: ${{ secrets.FROM_REGISTRY_PASSWORD }}
+        IMAGE_REGISTRY: ${{ secrets.IMAGE_REGISTRY }}
       run: mvn -B install org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
 
     - name: JaCoCo
