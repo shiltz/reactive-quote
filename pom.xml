@@ -168,11 +168,11 @@
                             <password>${env.FROM_REGISTRY_PASSWORD}</password>
                         </auth>
                     </from>
-                    <container>
-                        <ports>
-                            <port>8080</port>
-                        </ports>
-                    </container>
+<!--                    <container>-->
+<!--                        <ports>-->
+<!--                            <port>8080</port>-->
+<!--                        </ports>-->
+<!--                    </container>-->
                 </configuration>
             </plugin>
         </plugins>
