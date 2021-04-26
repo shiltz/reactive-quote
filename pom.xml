@@ -155,7 +155,7 @@
                 </executions>
                 <configuration>
                     <to>
-                        <image>${env.IMAGE_REGISTRY}/shiltz/reactive-quote</image>
+                        <image>${env.IMAGE_REGISTRY}</image>
                         <auth>
                             <username>${env.TO_REGISTRY_USERNAME}</username>
                             <password>${env.TO_REGISTRY_PASSWORD}</password>
